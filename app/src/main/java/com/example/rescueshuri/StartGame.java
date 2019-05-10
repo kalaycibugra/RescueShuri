@@ -36,7 +36,7 @@ public class StartGame extends AppCompatActivity {
         Boolean ismoving=false;
 //        LinearLayout board1 =(LinearLayout) findViewById(R.id.relativeLayout);
         Bitmap[] walk_array,shot_array;
-
+        boolean isMonsterDead=false;
         Bitmap background1,background2,background3,background4,background5,idle_player,walking0,walking1,walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5,ground,monster;
         Bitmap princess,fire;
         Display display;
@@ -46,7 +46,7 @@ public class StartGame extends AppCompatActivity {
         boolean isShot=false;
         int firespeed=40;
         int ManX,ManY;
-        int level=5;
+        int level=1;
         int manFrame = 0;
         int gravity=10;
         Point point;
@@ -163,7 +163,6 @@ public class StartGame extends AppCompatActivity {
                 canvas.drawBitmap(background5,null,rect,null);
 
             }
-            canvas.drawBitmap(fire,100,200,null);
             if(manFrame==0){
                 manFrame=1;
             }
@@ -185,16 +184,21 @@ public class StartGame extends AppCompatActivity {
 
 
             if(ismoving){
-                if(moveLeft)
-                    ManX=ManX-speed;
-                else if (moveRight)
-                    ManX=ManX+speed;
-
+                if(moveLeft) {
+                    if (ManX > 10)
+                        ManX = ManX - speed;
+                }
+                else if (moveRight) {
+                    if (ManX < dWidth)
+                        ManX = ManX + speed;
+                }
                 if(jumping){
                     if(leftJump){
+                        if(ManX>10&&ManY>10)
                         ManX=ManX-20;
                     }
                     else if(rightJump){
+                        if(ManX<dWidth&&ManY>10)
                         ManX=ManX+20;
                     }
                     ManY=ManY-50;
@@ -219,9 +223,12 @@ public class StartGame extends AppCompatActivity {
                 }
                 else {
                     canvas.drawBitmap(shot_array[manFrame], ManX, ManY, null);
-                    bulletcoordX=ManX+walking0.getWidth()/2;
-                    bulletcoordY=ManY+walking0.getHeight()/2;
-                    isShot=true;
+
+                    if(!isShot){
+                        bulletcoordX=ManX+walking0.getWidth()/2;
+                        bulletcoordY=ManY+walking0.getHeight()/2;
+                        isShot=true;
+                    }
                 }
             }
             else{
@@ -246,26 +253,54 @@ public class StartGame extends AppCompatActivity {
             canvas.drawBitmap(ground,500,500,null);
 
             if(isShot){
-                if(bulletcoordY<dHeight-monster.getHeight()-monster.getHeight()/4 ||bulletcoordY>dHeight-monster.getHeight()/4){
-                    canvas.drawBitmap(monster, dWidth - monster.getWidth(), dHeight - monster.getHeight() - monster.getHeight() / 4, null);
-                    canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
-                    bulletcoordX=firespeed+bulletcoordX;
+                if(!isMonsterDead){
+                    if(bulletcoordX>dWidth){
+                        isShot=false;
 
-                }
-                else{
-                    if(bulletcoordX+fire.getWidth()<dWidth-monster.getWidth()) {
-                        canvas.drawBitmap(monster, dWidth - monster.getWidth(), dHeight - monster.getHeight() - monster.getHeight() / 4, null);
+                    }
+                    if(bulletcoordY<dHeight-monster.getHeight()-monster.getHeight()/4 ||bulletcoordY>dHeight-monster.getHeight()/4){
+                        canvas.drawBitmap(monster, dWidth - monster.getWidth()-300, dHeight - monster.getHeight() - monster.getHeight() / 4, null);
                         canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
                         bulletcoordX=firespeed+bulletcoordX;
+
+                    }
+                    else{
+                        if(bulletcoordX+fire.getWidth()<dWidth-monster.getWidth()) {
+                            canvas.drawBitmap(monster, dWidth - monster.getWidth()-300, dHeight - monster.getHeight() - monster.getHeight() / 4, null);
+                            canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
+                            bulletcoordX=firespeed+bulletcoordX;
+                        }
+                        else{
+                            isMonsterDead=true;
+                            isShot=!isShot;
+                        }
+                    }
+                }
+                else{
+                    if(bulletcoordX>dWidth){
+                        isShot=false;
+
+                    }
+                    else{
+                        canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
+                        bulletcoordX=firespeed+bulletcoordX;
+
                     }
                 }
 
             }else{
-                canvas.drawBitmap(monster, dWidth - monster.getWidth(), dHeight - monster.getHeight() - monster.getHeight() / 4, null);
+                if(!isMonsterDead)
+                    canvas.drawBitmap(monster, dWidth - monster.getWidth()-300, dHeight - monster.getHeight() - monster.getHeight() / 4, null);
 
             }
 
-
+            if(ManX+walking0.getWidth()/2>dWidth-15&&ManY>dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4-10){
+                if(level!=5){
+                level=level+1;
+                ManX=0;
+                ManY=dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4;
+                isMonsterDead=false;}
+            }
 
             //canvas.drawBitmap(princess,dWidth-200,dHeight-princess.getHeight()-princess.getHeight()/4,null);
             handler.postDelayed(runnable,UPDATE_MILLIS);
