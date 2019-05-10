@@ -30,17 +30,23 @@ public class StartGame extends AppCompatActivity {
 
         Handler handler;
         Button jump;
+
         boolean moveLeft,moveRight,jumping,rightJump,leftJump,shot;
         Runnable runnable;
         Boolean ismoving=false;
 //        LinearLayout board1 =(LinearLayout) findViewById(R.id.relativeLayout);
         Bitmap[] walk_array,shot_array;
 
-        Bitmap background,idle_player,walking0,walking1,walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5;
+        Bitmap background1,background2,background3,background4,background5,idle_player,walking0,walking1,walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5,ground,monster;
+        Bitmap princess,fire;
         Display display;
         Rect rect;
         int speed=10;
+        int bulletcoordX,bulletcoordY;
+        boolean isShot=false;
+        int firespeed=40;
         int ManX,ManY;
+        int level=5;
         int manFrame = 0;
         int gravity=10;
         Point point;
@@ -58,35 +64,47 @@ public class StartGame extends AppCompatActivity {
             };
 
 //        *********************************************************
-            background= BitmapFactory.decodeResource(getResources(),R.drawable.back);
+            background1= BitmapFactory.decodeResource(getResources(),R.drawable.back);
+            background2= BitmapFactory.decodeResource(getResources(),R.drawable.battleback8);
+            background3= BitmapFactory.decodeResource(getResources(),R.drawable.flat);
+            background4= BitmapFactory.decodeResource(getResources(),R.drawable.cyber);
+            background5= BitmapFactory.decodeResource(getResources(),R.drawable.space);
             idle_player=BitmapFactory.decodeResource(getResources(),R.drawable.idle_000);
-            idle_player=Bitmap.createScaledBitmap(idle_player, 130, 200, true);
+            idle_player=Bitmap.createScaledBitmap(idle_player, 140, 200, true);
             walking0=BitmapFactory.decodeResource(getResources(),R.drawable.walk_000);
-            walking0=Bitmap.createScaledBitmap(walking0, 130, 200, true);
+            walking0=Bitmap.createScaledBitmap(walking0, 140, 200, true);
             walking1=BitmapFactory.decodeResource(getResources(),R.drawable.walk_001);
-            walking1=Bitmap.createScaledBitmap(walking1, 130, 200, true);
+            walking1=Bitmap.createScaledBitmap(walking1, 140, 200, true);
             walking2=BitmapFactory.decodeResource(getResources(),R.drawable.walk_002);
-            walking2=Bitmap.createScaledBitmap(walking2, 130, 200, true);
+            walking2=Bitmap.createScaledBitmap(walking2, 140, 200, true);
             walking3=BitmapFactory.decodeResource(getResources(),R.drawable.walk_003);
-            walking3=Bitmap.createScaledBitmap(walking3, 130, 200, true);
+            walking3=Bitmap.createScaledBitmap(walking3, 140, 200, true);
             walking4=BitmapFactory.decodeResource(getResources(),R.drawable.walk_004);
-            walking4=Bitmap.createScaledBitmap(walking4, 130, 200, true);
+            walking4=Bitmap.createScaledBitmap(walking4, 140, 200, true);
             walking5=BitmapFactory.decodeResource(getResources(),R.drawable.walk_005);
-            walking5=Bitmap.createScaledBitmap(walking5, 130, 200, true);
-
+            walking5=Bitmap.createScaledBitmap(walking5, 140, 200, true);
+            monster=BitmapFactory.decodeResource(getResources(),R.drawable.mum1);
+            monster=Bitmap.createScaledBitmap(monster, 140, 200, true);
+            princess=BitmapFactory.decodeResource(getResources(),R.drawable.med);
+            princess=Bitmap.createScaledBitmap(princess, 140, 200, true);
+            fire=BitmapFactory.decodeResource(getResources(),R.drawable.fireblast1);
+            fire=Bitmap.createScaledBitmap(fire, 40, 40, true);
             /////////////////////////////
             shotting0=BitmapFactory.decodeResource(getResources(),R.drawable.shot1_000);
-            shotting0=Bitmap.createScaledBitmap(shotting0, 130, 200, true);
+            shotting0=Bitmap.createScaledBitmap(shotting0, 140, 200, true);
             shotting1=BitmapFactory.decodeResource(getResources(),R.drawable.shot1_001);
-            shotting1=Bitmap.createScaledBitmap(shotting1, 130, 200, true);
+            shotting1=Bitmap.createScaledBitmap(shotting1, 140, 200, true);
             shotting2=BitmapFactory.decodeResource(getResources(),R.drawable.shot1_002);
-            shotting2=Bitmap.createScaledBitmap(shotting2, 130, 200, true);
+            shotting2=Bitmap.createScaledBitmap(shotting2, 140, 200, true);
             shotting3=BitmapFactory.decodeResource(getResources(),R.drawable.shot1_003);
-            shotting3=Bitmap.createScaledBitmap(shotting3, 130, 200, true);
+            shotting3=Bitmap.createScaledBitmap(shotting3, 140, 200, true);
             shotting4=BitmapFactory.decodeResource(getResources(),R.drawable.shot1_004);
-            shotting4=Bitmap.createScaledBitmap(shotting4, 130, 200, true);
+            shotting4=Bitmap.createScaledBitmap(shotting4, 140, 200, true);
             shotting5=BitmapFactory.decodeResource(getResources(),R.drawable.shot1_005);
-            shotting5=Bitmap.createScaledBitmap(shotting5, 130, 200, true);
+            shotting5=Bitmap.createScaledBitmap(shotting5, 140, 200, true);
+            ///////////
+            ground =BitmapFactory.decodeResource(getResources(),R.drawable.ground0);
+            ground=Bitmap.createScaledBitmap(ground, 350, 150, true);
 
             /////////////////////////////
             walk_array=new Bitmap[6];
@@ -127,8 +145,25 @@ public class StartGame extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            canvas.drawBitmap(background,null,rect,null);
 
+//            canvas.drawBitmap(background1,null,rect,null);
+            if(level==1){
+                canvas.drawBitmap(background1,null,rect,null);
+            }
+            else if(level==2){
+                canvas.drawBitmap(background2,null,rect,null);
+            }
+            else if(level==3){
+                canvas.drawBitmap(background3,null,rect,null);
+            }
+            else if(level==4){
+                canvas.drawBitmap(background4,null,rect,null);
+            }
+            else if(level==5){
+                canvas.drawBitmap(background5,null,rect,null);
+
+            }
+            canvas.drawBitmap(fire,100,200,null);
             if(manFrame==0){
                 manFrame=1;
             }
@@ -166,20 +201,73 @@ public class StartGame extends AppCompatActivity {
                 }
 
                 if(ManY<dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4){
-                    ManY=ManY+gravity;
-                }
-                if(!shot)
-                    canvas.drawBitmap(walk_array[manFrame],ManX,ManY,null);
-                else
-                    canvas.drawBitmap(shot_array[manFrame],ManX,ManY,null);
+                    if((ManX>500||(ManX+walking0.getWidth()>500))&&((ManX<850))){
+                        if(ManY+walking0.getHeight()>=500&&ManY+walking0.getHeight()<510){
+                            canvas.drawBitmap(walk_array[manFrame], ManX, ManY, null);
+                        }
+                        else{
+                            ManY=ManY+gravity;
+                        }
+                    }
+                    else
+                        ManY=ManY+gravity;
 
+
+                }
+                if(!shot) {
+                    canvas.drawBitmap(walk_array[manFrame], ManX, ManY, null);
+                }
+                else {
+                    canvas.drawBitmap(shot_array[manFrame], ManX, ManY, null);
+                    bulletcoordX=ManX+walking0.getWidth()/2;
+                    bulletcoordY=ManY+walking0.getHeight()/2;
+                    isShot=true;
+                }
             }
             else{
                 if(ManY<dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4){
-                    ManY=ManY+gravity;
+                    if((ManX>500||(ManX+walking0.getWidth()>500))&&((ManX<850))){
+                        if(ManY+walking0.getHeight()>=500&&ManY+walking0.getHeight()<510){
+                           canvas.drawBitmap(idle_player, ManX, ManY, null);
+                        }
+                        else{
+                            ManY=ManY+gravity;
+                        }
+                    }
+                    else{
+                    ManY=ManY+gravity;}
+//                    ManY=ManY+gravity;
                 }
+
                 canvas.drawBitmap(idle_player, ManX, ManY, null);
             }
+
+
+            canvas.drawBitmap(ground,500,500,null);
+
+            if(isShot){
+                if(bulletcoordY<dHeight-monster.getHeight()-monster.getHeight()/4 ||bulletcoordY>dHeight-monster.getHeight()/4){
+                    canvas.drawBitmap(monster, dWidth - monster.getWidth(), dHeight - monster.getHeight() - monster.getHeight() / 4, null);
+                    canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
+                    bulletcoordX=firespeed+bulletcoordX;
+
+                }
+                else{
+                    if(bulletcoordX+fire.getWidth()<dWidth-monster.getWidth()) {
+                        canvas.drawBitmap(monster, dWidth - monster.getWidth(), dHeight - monster.getHeight() - monster.getHeight() / 4, null);
+                        canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
+                        bulletcoordX=firespeed+bulletcoordX;
+                    }
+                }
+
+            }else{
+                canvas.drawBitmap(monster, dWidth - monster.getWidth(), dHeight - monster.getHeight() - monster.getHeight() / 4, null);
+
+            }
+
+
+
+            //canvas.drawBitmap(princess,dWidth-200,dHeight-princess.getHeight()-princess.getHeight()/4,null);
             handler.postDelayed(runnable,UPDATE_MILLIS);
         }
 
@@ -221,8 +309,6 @@ public class StartGame extends AppCompatActivity {
                 rightJump=false;
                 shot=false;
             }
-
-
             return true;
         }
     }
