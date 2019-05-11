@@ -40,7 +40,7 @@ public class StartGame extends AppCompatActivity {
         Bitmap[] walk_array,shot_array,level_array;
         boolean isMonsterDead=false;
         Bitmap background1,background2,background3,background4,background5,idle_player,walking0,walking1,walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5,ground,ground1,monster;
-        Bitmap princess,fire,block,gate,levels1,levels2,levels3,levels4,levels5,boss,spike,enemy,killer;
+        Bitmap princess,fire,block,gate,levels1,levels2,levels3,levels4,levels5,boss,spike,enemy,killer,coin;
         Display display;
         Rect rect;
         int speed=10;
@@ -80,7 +80,8 @@ public class StartGame extends AppCompatActivity {
             boss=Bitmap.createScaledBitmap(boss,300,400,true);
             killer=BitmapFactory.decodeResource(getResources(),R.drawable.eme);
             killer=Bitmap.createScaledBitmap(killer,300,400,true);
-
+            coin=BitmapFactory.decodeResource(getResources(),R.drawable.coin_gold);
+            coin=Bitmap.createScaledBitmap(coin,70,70,true);
             spike=BitmapFactory.decodeResource(getResources(),R.drawable.spike);
             spike=Bitmap.createScaledBitmap(spike,300,400,true);
             enemy=BitmapFactory.decodeResource(getResources(),R.drawable.enemy);
@@ -196,21 +197,33 @@ public class StartGame extends AppCompatActivity {
                 canvas.drawBitmap(background1,null,rect,null);
 //                canvas.drawBitmap(levels1,10,10,null);
                 canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
+                canvas.drawBitmap(coin,1000,729,null);
+                canvas.drawBitmap(coin,1300,200,null);
+                canvas.drawBitmap(coin,300,350,null);
+
             }
             else if(level==2){
                 canvas.drawBitmap(background2,null,rect,null);
                 canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
+                canvas.drawBitmap(coin,123,729,null);
+                canvas.drawBitmap(coin,1300,321,null);
+                canvas.drawBitmap(coin,300,900,null);
                 monster=enemy;
 
             }
             else if(level==3){
                 canvas.drawBitmap(background3,null,rect,null);
                 canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
+                canvas.drawBitmap(coin,544,729,null);
+                canvas.drawBitmap(coin,123,321,null);
+                canvas.drawBitmap(coin,900,900,null);
                 monster=killer;
             }
             else if(level==4){
                 canvas.drawBitmap(background4,null,rect,null);
                 canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
+                canvas.drawBitmap(coin,1000,120,null);
+
                 monster=spike;
 
             }
@@ -220,6 +233,7 @@ public class StartGame extends AppCompatActivity {
 
             }
             canvas.drawBitmap(level_array[level-1],10,10,null);
+
             if(manFrame==0){
                 manFrame=1;
             }
