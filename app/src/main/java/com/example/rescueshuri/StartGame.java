@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class StartGame extends AppCompatActivity {
     GameView gameView;
@@ -32,33 +33,37 @@ public class StartGame extends AppCompatActivity {
 
         Handler handler;
         Button jump;
-
-        boolean moveLeft,moveRight,jumping,rightJump,leftJump,shot;
+        int rocketspeed=25;
+        int rocketX,rocketY;
+        boolean moveLeft,moveRight,jumping,rightJump,leftJump,shot,is_level_swap;
         Runnable runnable;
         Boolean ismoving=false;
 //        LinearLayout board1 =(LinearLayout) findViewById(R.id.relativeLayout);
         Bitmap[] walk_array,shot_array,level_array;
         boolean isMonsterDead=false;
-        Bitmap background1,background2,background3,background4,background5,idle_player,walking0,walking1,
+        Bitmap rocket,first_mons,back_over,background1,background2,background3,background4,background5,idle_player,walking0,walking1,
                 walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5,ground,ground1,monster;
-        Bitmap princess,fire,block,gate,levels1,levels2,levels3,levels4,levels5,boss,spike,enemy,killer,coin;
+        Bitmap princess,fire,enemy_fire,block,gate,levels1,levels2,levels3,levels4,levels5,boss,spike,enemy,killer,coin1,coin2,coin3,heart;
         Display display;
         Rect rect;
         int speed=10;
-        int bulletcoordX,bulletcoordY;
+        int bulletcoordX,bulletcoordY,enemybulletX,enemybulletY,coin1_x,coin1_y,coin2_x,coin2_y,coin3_x,coin3_y;
         boolean isShot=false;
-        int firespeed=40;
+        boolean isHit=false;
+        int firespeed=60;
         int ManX,ManY;
+        int life=3;
         int level=1;
         int monster_x,monster_y;
-
+        boolean is_coin1,is_coin2,is_coin3;
+        int monster_life=50;
         Random rand = new Random();
         int groundX,groundY,ground1X,ground1Y;
         int manFrame = 0;
         int gravity=10;
+        boolean game_over=false;
         Point point;
         final int UPDATE_MILLIS=50;
-
         int dWidth,dHeight; //device width and height
         public GameView(Context context) {
             super(context);
@@ -76,6 +81,7 @@ public class StartGame extends AppCompatActivity {
             background3= BitmapFactory.decodeResource(getResources(),R.drawable.flat);
             background4= BitmapFactory.decodeResource(getResources(),R.drawable.cyber);
             background5= BitmapFactory.decodeResource(getResources(),R.drawable.space);
+            back_over=BitmapFactory.decodeResource(getResources(),R.drawable.game_over);
             idle_player=BitmapFactory.decodeResource(getResources(),R.drawable.idle_000);
 
             idle_player=Bitmap.createScaledBitmap(idle_player, 140, 200, true);
@@ -83,8 +89,18 @@ public class StartGame extends AppCompatActivity {
             boss=Bitmap.createScaledBitmap(boss,300,400,true);
             killer=BitmapFactory.decodeResource(getResources(),R.drawable.eme);
             killer=Bitmap.createScaledBitmap(killer,300,400,true);
-            coin=BitmapFactory.decodeResource(getResources(),R.drawable.coin_gold);
-            coin=Bitmap.createScaledBitmap(coin,70,70,true);
+            coin1=BitmapFactory.decodeResource(getResources(),R.drawable.coin_gold);
+            coin1=Bitmap.createScaledBitmap(coin1,70,70,true);
+            coin2=BitmapFactory.decodeResource(getResources(),R.drawable.coin_gold);
+            coin2=Bitmap.createScaledBitmap(coin2,70,70,true);
+            coin3=BitmapFactory.decodeResource(getResources(),R.drawable.coin_gold);
+            coin3=Bitmap.createScaledBitmap(coin2,70,70,true);
+            heart=BitmapFactory.decodeResource(getResources(),R.drawable.heart);
+            heart=Bitmap.createScaledBitmap(heart,70,70,true);
+
+
+            rocket=BitmapFactory.decodeResource(getResources(),R.drawable.rocket);
+            rocket=Bitmap.createScaledBitmap(rocket,200,150,true);
             spike=BitmapFactory.decodeResource(getResources(),R.drawable.spike);
             spike=Bitmap.createScaledBitmap(spike,300,400,true);
             enemy=BitmapFactory.decodeResource(getResources(),R.drawable.enemy);
@@ -107,6 +123,8 @@ public class StartGame extends AppCompatActivity {
             princess=Bitmap.createScaledBitmap(princess, 140, 200, true);
             fire=BitmapFactory.decodeResource(getResources(),R.drawable.fireblast1);
             fire=Bitmap.createScaledBitmap(fire, 40, 40, true);
+            enemy_fire=BitmapFactory.decodeResource(getResources(),R.drawable.enemy_fire);
+            enemy_fire=Bitmap.createScaledBitmap(enemy_fire, 40, 40, true);
             block=BitmapFactory.decodeResource(getResources(),R.drawable.ground2);
             block=Bitmap.createScaledBitmap(block, 60, 60, true);
             gate=BitmapFactory.decodeResource(getResources(),R.drawable.gate);
@@ -186,61 +204,88 @@ public class StartGame extends AppCompatActivity {
             jumping=false;
             rightJump=false;
             leftJump=false;
-//            new Random().nextInt(5 + 1)  + 10 // [0...5]  + 10 = [10...15]
+            is_coin1=true;
+            is_coin2=true;
+            is_coin3=true;
             groundX=new Random().nextInt(dWidth/2+1)+300;
             groundY=new Random().nextInt(dHeight/2+1)+300;
+            is_level_swap=true;
+            monster_x=dWidth - monster.getWidth()-300;
+            monster_y=dHeight - monster.getHeight() - monster.getHeight() / 4;
+            enemybulletX=monster_x;
+            enemybulletY=monster_y+monster.getHeight()/2;
+            first_mons=monster;
+            rocketX=dWidth;
+            rocketY=250;
         }
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            monster_x=dWidth - monster.getWidth()-300;
-            monster_y=dHeight - monster.getHeight() - monster.getHeight() / 4;
+            if(game_over){
+                level=1;
+                canvas.drawBitmap(back_over,null,rect,null);
 
-//            canvas.drawBitmap(background1,null,rect,null);
-
+            }
+            else
+            {
             if(level==1){
                 canvas.drawBitmap(background1,null,rect,null);
-//                canvas.drawBitmap(levels1,10,10,null);
-                canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
-                canvas.drawBitmap(coin,1000,729,null);
-                canvas.drawBitmap(coin,1300,200,null);
-
-                if(!enemyCollusion(ManX,ManY,300,350,walking0,coin))
-                    canvas.drawBitmap(coin,300,350,null);
-
+                monster=first_mons;
+//
             }
             else if(level==2){
                 canvas.drawBitmap(background2,null,rect,null);
-                canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
-                canvas.drawBitmap(coin,123,729,null);
-                canvas.drawBitmap(coin,1300,321,null);
-                canvas.drawBitmap(coin,300,900,null);
                 monster=enemy;
-
             }
             else if(level==3){
                 canvas.drawBitmap(background3,null,rect,null);
-                canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
-                canvas.drawBitmap(coin,544,729,null);
-                canvas.drawBitmap(coin,123,321,null);
-                canvas.drawBitmap(coin,900,900,null);
                 monster=killer;
             }
             else if(level==4){
                 canvas.drawBitmap(background4,null,rect,null);
-                canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
-                canvas.drawBitmap(coin,1000,120,null);
-
                 monster=spike;
 
             }
             else if(level==5){
                 canvas.drawBitmap(background5,null,rect,null);
                 monster=boss;
+            }
+
+            canvas.drawBitmap(level_array[level-1],10,10,null);
+            canvas.drawBitmap(gate,dWidth-150,dHeight-450,null);
+            if(is_level_swap){
+                groundX=new Random().nextInt(dWidth/2+1)+300;
+                groundY=new Random().nextInt(dHeight/2+1)+300;
+                coin1_x=new Random().nextInt(dWidth-100+1)+100;
+                coin1_y=new Random().nextInt(dHeight-100+1)+100;
+                coin2_x=new Random().nextInt(dWidth-100+1)+100;
+                coin2_y=new Random().nextInt(dHeight-100+1)+100;
+                coin3_x=new Random().nextInt(dWidth-100+1)+100;
+                coin3_y=new Random().nextInt(dHeight-100+1)+100;
+                is_level_swap=false;
+            }
+            for (int i=0;i<life;i++){
+                canvas.drawBitmap(heart,10+levels1.getWidth()+i*heart.getWidth(),10,null);
 
             }
-            canvas.drawBitmap(level_array[level-1],10,10,null);
-
+            if(enemyCollusion(ManX,ManY,coin1_x,coin1_y,walking0,coin1)) {
+                is_coin1 = false;
+//                life++;
+            }
+            if(enemyCollusion(ManX,ManY,coin2_x,coin2_y,walking0,coin2)) {
+                is_coin2 = false;
+//                life++;
+            }
+            if(enemyCollusion(ManX,ManY,coin3_x,coin3_y,walking0,coin3)) {
+                is_coin3 = false;
+//                life++;
+            }
+            if(is_coin1)
+                canvas.drawBitmap(coin1,coin1_x,coin1_y,null);
+            if(is_coin2)
+                canvas.drawBitmap(coin2,coin2_x,coin2_y,null);
+            if(is_coin3)
+                canvas.drawBitmap(coin3,coin3_x,coin3_y,null);
             if(manFrame==0){
                 manFrame=1;
             }
@@ -259,8 +304,6 @@ public class StartGame extends AppCompatActivity {
             else{
                 manFrame=0;
             }
-
-
             if(ismoving){
                 if(moveLeft) {
                     if (ManX > 10)
@@ -293,15 +336,12 @@ public class StartGame extends AppCompatActivity {
                     }
                     else
                         ManY=ManY+gravity;
-
-
                 }
                 if(!shot) {
                     canvas.drawBitmap(walk_array[manFrame], ManX, ManY, null);
                 }
                 else {
                     canvas.drawBitmap(shot_array[manFrame], ManX, ManY, null);
-
                     if(!isShot){
                         bulletcoordX=ManX+walking0.getWidth()/2;
                         bulletcoordY=ManY+walking0.getHeight()/2;
@@ -320,8 +360,8 @@ public class StartGame extends AppCompatActivity {
                         }
                     }
                     else{
-                    ManY=ManY+gravity;}
-//                    ManY=ManY+gravity;
+                        ManY=ManY+gravity;
+                    }
                 }
 
                 canvas.drawBitmap(idle_player, ManX, ManY, null);
@@ -335,23 +375,17 @@ public class StartGame extends AppCompatActivity {
                     if(bulletcoordX>dWidth){
                         isShot=false;
                     }
-                    if(bulletcoordY<dHeight-monster.getHeight()-monster.getHeight()/4 ||bulletcoordY>dHeight-monster.getHeight()/4){
-                        canvas.drawBitmap(monster, dWidth - monster.getWidth()-300, dHeight - monster.getHeight() - monster.getHeight() / 4, null);
-                        canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
-                        bulletcoordX=firespeed+bulletcoordX;
+                    if(enemyCollusion(monster_x,monster_y,bulletcoordX,bulletcoordY,monster,fire)){
+                        isMonsterDead=true;
+                        isShot=!isShot;
 
                     }
                     else{
-                        if(bulletcoordX+fire.getWidth()<dWidth-monster.getWidth()) {
-                            canvas.drawBitmap(monster, dWidth - monster.getWidth()-300, dHeight - monster.getHeight() - monster.getHeight() / 4, null);
-                            canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
-                            bulletcoordX=firespeed+bulletcoordX;
-                        }
-                        else{
-                            isMonsterDead=true;
-                            isShot=!isShot;
-                        }
+                        canvas.drawBitmap(monster, monster_x,monster_y, null);
+                        canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
+                        bulletcoordX=firespeed+bulletcoordX;
                     }
+//
                 }
                 else{
                     if(bulletcoordX>dWidth){
@@ -361,22 +395,74 @@ public class StartGame extends AppCompatActivity {
                     else{
                         canvas.drawBitmap(fire,bulletcoordX,bulletcoordY,null);
                         bulletcoordX=firespeed+bulletcoordX;
-
                     }
                 }
-            }else{
-                if(!isMonsterDead)
-                    canvas.drawBitmap(monster, dWidth - monster.getWidth()-300, dHeight - monster.getHeight() - monster.getHeight() / 4, null);
-
             }
+            if(!isMonsterDead){
+                canvas.drawBitmap(monster, monster_x, monster_y, null);
+
+                if(enemybulletX<0){
+                    enemybulletX=monster_x;
+                }
+                if(enemyCollusion(ManX,ManY,enemybulletX,enemybulletY,idle_player,enemy_fire)) {
+                    System.out.println("hit");
+                    System.out.println(ManX);
+                    System.out.println(enemybulletX);
+                    System.out.println(life);
+                    System.out.println("asdasadsasdasdadsadsasdasas");
+//                    is_level_swap=true;
+//                    System.out.println(life);
+                    if (life == 0){
+                        is_coin1 = true;
+                        game_over = true;
+                        ManX = 0;
+                        ManY = dHeight - 2 * idle_player.getHeight() + idle_player.getHeight() / 2 + idle_player.getHeight() / 4;
+                        is_coin2 = true;
+                        is_coin3 = true;
+                        enemybulletX = monster_x;
+                        life=3;
+                    }
+
+                    else{
+//                        enemybulletX = enemybulletX - firespeed;
+                        enemybulletX = monster_x;
+
+                        life--;
+                    }
+                }
+                else {
+                    canvas.drawBitmap(enemy_fire, enemybulletX, enemybulletY, null);
+                    enemybulletX = enemybulletX - firespeed;
+                }
+            }
+                if(enemyCollusion(ManX,ManY,rocketX,rocketY,idle_player,rocket)){
+                    if (life == 0){
+                        is_coin1 = true;
+                        game_over = true;
+                        ManX = 0;
+                        ManY = dHeight - 2 * idle_player.getHeight() + idle_player.getHeight() / 2 + idle_player.getHeight() / 4;
+                        is_coin2 = true;
+                        is_coin3 = true;
+                        enemybulletX = monster_x;
+                        life=3;
+                    }
+                    else{
+                        rocketX=dWidth;
+                        life--;
+                    }
+                }
             if(ManX+walking0.getWidth()/2>dWidth-15&&ManY>dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4-10){
                 if(level!=5){
-                level=level+1;
-                ManX=0;
-                ManY=dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4;
-                isMonsterDead=false;
-                    groundX=new Random().nextInt(dWidth/2+1)+300;
-                    groundY=new Random().nextInt(dHeight/2+1)+300;}
+                    level=level+1;
+                    ManX=0;
+                    ManY=dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4;
+                    isMonsterDead=false;
+
+                    is_level_swap=true;
+                    is_coin1=true;
+                    is_coin2=true;
+                    is_coin3=true;
+                }
             }
             if(level==5){
                 canvas.drawBitmap(block,dWidth-150-block.getWidth(),dHeight-2*block.getHeight(),null);
@@ -394,20 +480,28 @@ public class StartGame extends AppCompatActivity {
                 canvas.drawBitmap(princess,dWidth-150,dHeight-2*princess.getHeight()+princess.getHeight()/2+princess.getHeight()/4,null);
 
             }
+            if(rocketX+rocket.getWidth()<0)
+                rocketX=dWidth;
+            canvas.drawBitmap(rocket,rocketX,rocketY,null);
+            rocketX=rocketX-rocketspeed;
+            }
             //canvas.drawBitmap(princess,dWidth-200,dHeight-princess.getHeight()-princess.getHeight()/4,null);
             handler.postDelayed(runnable,UPDATE_MILLIS);
         }
         public boolean enemyCollusion(int main_x,int main_y,int enemy_x,int enemy_y,Bitmap main,Bitmap enemy){
 
-            if (main_x<enemy_x+enemy.getWidth()&&main_x+main.getWidth()>enemy_x&&main_y<enemy_y+enemy.getHeight()&&main_y+main.getHeight()>main_y)
+            if (main_x<enemy_x+enemy.getWidth()&&main_x+main.getWidth()>enemy_x&&main_y<enemy_y+enemy.getHeight()&&main_y+main.getHeight()>enemy_y)
                 return true;
             else
                 return false;
         }
+
+
         public boolean onTouchEvent(MotionEvent event){
             int action = event.getAction();
             int x = (int)event.getX();
             int y = (int)event.getY();
+            game_over=false;
             if(action==MotionEvent.ACTION_DOWN){
 //          ManX=ManX+speed;
                 if(y>dHeight*0.60){
@@ -432,6 +526,7 @@ public class StartGame extends AppCompatActivity {
                     jumping=true;
                 }
                 ismoving=!ismoving;
+
             }
             else if (action==MotionEvent.ACTION_UP){
                 ismoving=!ismoving;
