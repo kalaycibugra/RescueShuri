@@ -39,7 +39,8 @@ public class StartGame extends AppCompatActivity {
 //        LinearLayout board1 =(LinearLayout) findViewById(R.id.relativeLayout);
         Bitmap[] walk_array,shot_array,level_array;
         boolean isMonsterDead=false;
-        Bitmap background1,background2,background3,background4,background5,idle_player,walking0,walking1,walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5,ground,ground1,monster;
+        Bitmap background1,background2,background3,background4,background5,idle_player,walking0,walking1,
+                walking2,walking3,walking4,walking5,shotting0,shotting1,shotting2,shotting3,shotting4,shotting5,ground,ground1,monster;
         Bitmap princess,fire,block,gate,levels1,levels2,levels3,levels4,levels5,boss,spike,enemy,killer,coin;
         Display display;
         Rect rect;
@@ -49,6 +50,8 @@ public class StartGame extends AppCompatActivity {
         int firespeed=40;
         int ManX,ManY;
         int level=1;
+        int monster_x,monster_y;
+
         Random rand = new Random();
         int groundX,groundY,ground1X,ground1Y;
         int manFrame = 0;
@@ -190,6 +193,8 @@ public class StartGame extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
+            monster_x=dWidth - monster.getWidth()-300;
+            monster_y=dHeight - monster.getHeight() - monster.getHeight() / 4;
 
 //            canvas.drawBitmap(background1,null,rect,null);
 
@@ -199,7 +204,9 @@ public class StartGame extends AppCompatActivity {
                 canvas.drawBitmap(gate,dWidth-150,dHeight-400,null);
                 canvas.drawBitmap(coin,1000,729,null);
                 canvas.drawBitmap(coin,1300,200,null);
-                canvas.drawBitmap(coin,300,350,null);
+
+                if(!enemyCollusion(ManX,ManY,300,350,walking0,coin))
+                    canvas.drawBitmap(coin,300,350,null);
 
             }
             else if(level==2){
@@ -390,7 +397,13 @@ public class StartGame extends AppCompatActivity {
             //canvas.drawBitmap(princess,dWidth-200,dHeight-princess.getHeight()-princess.getHeight()/4,null);
             handler.postDelayed(runnable,UPDATE_MILLIS);
         }
+        public boolean enemyCollusion(int main_x,int main_y,int enemy_x,int enemy_y,Bitmap main,Bitmap enemy){
 
+            if (main_x<enemy_x+enemy.getWidth()&&main_x+main.getWidth()>enemy_x&&main_y<enemy_y+enemy.getHeight()&&main_y+main.getHeight()>main_y)
+                return true;
+            else
+                return false;
+        }
         public boolean onTouchEvent(MotionEvent event){
             int action = event.getAction();
             int x = (int)event.getX();

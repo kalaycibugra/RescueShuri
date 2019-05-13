@@ -1,0 +1,230 @@
+commit 9664741a984e67c8c3d94ad4201c82eda672c48e
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Fri May 10 21:41:15 2019 -0400
+
+    armor boost feature and coin collection
+
+ .../main/java/com/example/rescueshuri/StartGame.java  |  18 ++++++++++++++++--
+ app/src/main/res/drawable/coin_gold.png               | Bin 0 -> 1351 bytes
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+commit b39bea1c7a2d75a1a9d68134c923749be0e48ac0
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Fri May 10 21:27:25 2019 -0400
+
+    level design done
+
+ .../java/com/example/rescueshuri/StartGame.java    |  99 ++++++++++++++++++---
+ app/src/main/res/drawable-v24/ground2.png          | Bin 0 -> 23181 bytes
+ app/src/main/res/drawable/boss.png                 | Bin 0 -> 101663 bytes
+ app/src/main/res/drawable/eme.png                  | Bin 0 -> 166718 bytes
+ app/src/main/res/drawable/enemy.png                | Bin 0 -> 214638 bytes
+ app/src/main/res/drawable/gate.png                 | Bin 0 -> 79562 bytes
+ app/src/main/res/drawable/level1.png               | Bin 0 -> 79359 bytes
+ app/src/main/res/drawable/level2.png               | Bin 0 -> 87069 bytes
+ app/src/main/res/drawable/level3.png               | Bin 0 -> 85802 bytes
+ app/src/main/res/drawable/level4.png               | Bin 0 -> 86259 bytes
+ app/src/main/res/drawable/level5.png               | Bin 0 -> 86372 bytes
+ app/src/main/res/drawable/spike.png                | Bin 0 -> 2223 bytes
+ 12 files changed, 85 insertions(+), 14 deletions(-)
+
+commit 84b234c933ea9c1862410886cf76c9a4671b9b60
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Fri May 10 18:35:46 2019 -0400
+
+    level transitions
+
+ .../java/com/example/rescueshuri/StartGame.java    | 73 ++++++++++++++++------
+ 1 file changed, 54 insertions(+), 19 deletions(-)
+
+commit a3d5b74a2703e80509a6c12baa3aeeb071d0f6e5
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Fri May 10 17:49:37 2019 -0400
+
+    levels
+
+ .DS_Store                                          | Bin 6148 -> 6148 bytes
+ .../java/com/example/rescueshuri/StartGame.java    | 138 +++++++++++++++++----
+ app/src/main/res/drawable-v24/battleback8.png      | Bin 0 -> 521634 bytes
+ app/src/main/res/drawable-v24/fireblast1.png       | Bin 0 -> 173934 bytes
+ app/src/main/res/drawable-v24/ground0.png          | Bin 0 -> 26653 bytes
+ app/src/main/res/drawable-v24/med.png              | Bin 0 -> 2220 bytes
+ app/src/main/res/drawable/background.png           | Bin 81602 -> 0 bytes
+ app/src/main/res/drawable/cyber.png                | Bin 0 -> 23397 bytes
+ app/src/main/res/drawable/flat.png                 | Bin 0 -> 133656 bytes
+ app/src/main/res/drawable/mum.png                  | Bin 0 -> 88571 bytes
+ app/src/main/res/drawable/mum1.png                 | Bin 0 -> 880 bytes
+ app/src/main/res/drawable/space.png                | Bin 0 -> 2620579 bytes
+ 12 files changed, 112 insertions(+), 26 deletions(-)
+
+commit af03201d28b3bdd41768f027c4a24d328bbb7322
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Thu May 9 17:38:55 2019 -0400
+
+    moving animations handled
+
+ .../java/com/example/rescueshuri/GameView.java     | 269 +++++++++++----------
+ .../example/rescueshuri/OnSwipeTouchListener.java  |  73 ++++++
+ .../java/com/example/rescueshuri/StartGame.java    | 215 +++++++++++++++-
+ .../res/drawable-v24/{arrowDown.png => down.png}   | Bin
+ .../res/drawable-v24/{arrowLeft.png => left.png}   | Bin
+ .../res/drawable-v24/{arrowRight.png => right.png} | Bin
+ app/src/main/res/drawable-v24/shot1_000.png        | Bin 0 -> 16313 bytes
+ app/src/main/res/drawable-v24/shot1_001.png        | Bin 0 -> 16023 bytes
+ app/src/main/res/drawable-v24/shot1_002.png        | Bin 0 -> 15931 bytes
+ app/src/main/res/drawable-v24/shot1_003.png        | Bin 0 -> 15923 bytes
+ app/src/main/res/drawable-v24/shot1_004.png        | Bin 0 -> 16610 bytes
+ app/src/main/res/drawable-v24/shot1_005.png        | Bin 0 -> 15720 bytes
+ .../main/res/drawable-v24/{arrowUp.png => up.png}  | Bin
+ app/src/main/res/layout/activity_game_view.xml     |  27 +--
+ app/src/main/res/layout/activity_start_game.xml    |   4 +-
+ 15 files changed, 435 insertions(+), 153 deletions(-)
+
+commit feb1e72fe3fcf3590091222bb8987ed77117336b
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Thu May 9 12:20:03 2019 -0400
+
+    walking animation
+
+ .../java/com/example/rescueshuri/GameView.java     | 110 +++++++++++++++++++++
+ app/src/main/res/drawable-v24/arrowDown.png        | Bin 0 -> 15114 bytes
+ app/src/main/res/drawable-v24/arrowLeft.png        | Bin 0 -> 15123 bytes
+ app/src/main/res/drawable-v24/arrowRight.png       | Bin 0 -> 15114 bytes
+ app/src/main/res/drawable-v24/arrowUp.png          | Bin 0 -> 15072 bytes
+ app/src/main/res/drawable/back.jpg                 | Bin 0 -> 19948 bytes
+ app/src/main/res/drawable/background.png           | Bin 0 -> 81602 bytes
+ app/src/main/res/drawable/running_man.png          | Bin 0 -> 7287 bytes
+ 8 files changed, 110 insertions(+)
+
+commit cedf2808b25d784e70d632d73fd2722143740c35
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Thu May 9 00:02:54 2019 -0400
+
+    start page design
+
+ app/src/main/AndroidManifest.xml                   |  11 +++++++--
+ .../java/com/example/rescueshuri/MainActivity.java |   7 ++++++
+ app/src/main/res/drawable-v24/Idle_000.png         | Bin 0 -> 15871 bytes
+ app/src/main/res/layout/activity_game_view.xml     |  25 ++++++++++++++++++-
+ app/src/main/res/layout/activity_main.xml          |  27 ++++++++++++++++-----
+ app/src/main/res/values/colors.xml                 |  13 ++++++++++
+ app/src/main/res/values/strings.xml                |   2 +-
+ app/src/main/res/values/styles.xml                 |   2 +-
+ 8 files changed, 76 insertions(+), 11 deletions(-)
+
+commit 19b1b0f4e1ea41fca69b3af0c33a2a6873314d35
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Wed May 8 23:12:14 2019 -0400
+
+    android setup
+
+ .DS_Store                                             | Bin 6148 -> 6148 bytes
+ app/src/main/AndroidManifest.xml                      |   3 +++
+ .../main/java/com/example/rescueshuri/GameView.java   |  17 +++++++++++++++++
+ .../main/java/com/example/rescueshuri/StartGame.java  |  17 +++++++++++++++++
+ app/src/main/res/drawable-v24/walk_000.png            | Bin 0 -> 18960 bytes
+ app/src/main/res/drawable-v24/walk_001.png            | Bin 0 -> 17670 bytes
+ app/src/main/res/drawable-v24/walk_002.png            | Bin 0 -> 17658 bytes
+ app/src/main/res/drawable-v24/walk_003.png            | Bin 0 -> 17775 bytes
+ app/src/main/res/drawable-v24/walk_004.png            | Bin 0 -> 17078 bytes
+ app/src/main/res/drawable-v24/walk_005.png            | Bin 0 -> 18501 bytes
+ app/src/main/res/layout/activity_game_view.xml        |   9 +++++++++
+ app/src/main/res/layout/activity_start_game.xml       |   9 +++++++++
+ 12 files changed, 55 insertions(+)
+
+commit 9790d84a5ca5500a2c3abc9e0fec54cabf4a8c44
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Wed May 8 23:03:43 2019 -0400
+
+    switched to android
+
+ .DS_Store                                          | Bin 6148 -> 6148 bytes
+ .gitignore                                         |  13 +
+ .idea/codeStyles/Project.xml                       |  29 ++
+ .idea/gradle.xml                                   |  15 +
+ .idea/misc.xml                                     |   9 +
+ .idea/runConfigurations.xml                        |  12 +
+ .idea/vcs.xml                                      |   6 +
+ RescueShuri/.DS_Store                              | Bin 6148 -> 0 bytes
+ RescueShuri/RescueShuri.xcodeproj/project.pbxproj  | 353 ---------------------
+ .../project.xcworkspace/contents.xcworkspacedata   |   7 -
+ .../xcshareddata/IDEWorkspaceChecks.plist          |   8 -
+ .../UserInterfaceState.xcuserstate                 | Bin 12785 -> 0 bytes
+ .../xcschemes/xcschememanagement.plist             |  14 -
+ RescueShuri/RescueShuri/Actions.sks                | Bin 1892 -> 0 bytes
+ RescueShuri/RescueShuri/AppDelegate.swift          |  46 ---
+ .../AppIcon.appiconset/Contents.json               |  98 ------
+ .../RescueShuri/Assets.xcassets/Contents.json      |   6 -
+ .../RescueShuri/Base.lproj/LaunchScreen.storyboard |  25 --
+ RescueShuri/RescueShuri/Base.lproj/Main.storyboard |  24 --
+ RescueShuri/RescueShuri/GameScene.sks              | Bin 4694 -> 0 bytes
+ RescueShuri/RescueShuri/GameScene.swift            |  89 ------
+ RescueShuri/RescueShuri/GameViewController.swift   |  50 ---
+ RescueShuri/RescueShuri/Info.plist                 |  47 ---
+ app/.gitignore                                     |   1 +
+ app/build.gradle                                   |  28 ++
+ app/proguard-rules.pro                             |  21 ++
+ .../rescueshuri/ExampleInstrumentedTest.java       |  26 ++
+ app/src/main/AndroidManifest.xml                   |  21 ++
+ .../java/com/example/rescueshuri/MainActivity.java |  13 +
+ .../res/drawable-v24/ic_launcher_foreground.xml    |  34 ++
+ .../main/res/drawable/ic_launcher_background.xml   | 170 ++++++++++
+ app/src/main/res/layout/activity_main.xml          |  18 ++
+ app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml |   5 +
+ .../res/mipmap-anydpi-v26/ic_launcher_round.xml    |   5 +
+ app/src/main/res/mipmap-hdpi/ic_launcher.png       | Bin 0 -> 2963 bytes
+ app/src/main/res/mipmap-hdpi/ic_launcher_round.png | Bin 0 -> 4905 bytes
+ app/src/main/res/mipmap-mdpi/ic_launcher.png       | Bin 0 -> 2060 bytes
+ app/src/main/res/mipmap-mdpi/ic_launcher_round.png | Bin 0 -> 2783 bytes
+ app/src/main/res/mipmap-xhdpi/ic_launcher.png      | Bin 0 -> 4490 bytes
+ .../main/res/mipmap-xhdpi/ic_launcher_round.png    | Bin 0 -> 6895 bytes
+ app/src/main/res/mipmap-xxhdpi/ic_launcher.png     | Bin 0 -> 6387 bytes
+ .../main/res/mipmap-xxhdpi/ic_launcher_round.png   | Bin 0 -> 10413 bytes
+ app/src/main/res/mipmap-xxxhdpi/ic_launcher.png    | Bin 0 -> 9128 bytes
+ .../main/res/mipmap-xxxhdpi/ic_launcher_round.png  | Bin 0 -> 15132 bytes
+ app/src/main/res/values/colors.xml                 |   6 +
+ app/src/main/res/values/strings.xml                |   3 +
+ app/src/main/res/values/styles.xml                 |  11 +
+ .../com/example/rescueshuri/ExampleUnitTest.java   |  17 +
+ build.gradle                                       |  27 ++
+ gradle.properties                                  |  15 +
+ gradle/wrapper/gradle-wrapper.jar                  | Bin 0 -> 54329 bytes
+ gradle/wrapper/gradle-wrapper.properties           |   6 +
+ gradlew                                            | 172 ++++++++++
+ gradlew.bat                                        |  84 +++++
+ settings.gradle                                    |   1 +
+ 55 files changed, 768 insertions(+), 767 deletions(-)
+
+commit 3b1423acc669befd722f68c9e53194ce27151196
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Thu May 2 14:02:08 2019 -0400
+
+    project created
+
+ .DS_Store                                          | Bin 0 -> 6148 bytes
+ RescueShuri/.DS_Store                              | Bin 0 -> 6148 bytes
+ RescueShuri/RescueShuri.xcodeproj/project.pbxproj  | 353 +++++++++++++++++++++
+ .../project.xcworkspace/contents.xcworkspacedata   |   7 +
+ .../xcshareddata/IDEWorkspaceChecks.plist          |   8 +
+ .../UserInterfaceState.xcuserstate                 | Bin 0 -> 12785 bytes
+ .../xcschemes/xcschememanagement.plist             |  14 +
+ RescueShuri/RescueShuri/Actions.sks                | Bin 0 -> 1892 bytes
+ RescueShuri/RescueShuri/AppDelegate.swift          |  46 +++
+ .../AppIcon.appiconset/Contents.json               |  98 ++++++
+ .../RescueShuri/Assets.xcassets/Contents.json      |   6 +
+ .../RescueShuri/Base.lproj/LaunchScreen.storyboard |  25 ++
+ RescueShuri/RescueShuri/Base.lproj/Main.storyboard |  24 ++
+ RescueShuri/RescueShuri/GameScene.sks              | Bin 0 -> 4694 bytes
+ RescueShuri/RescueShuri/GameScene.swift            |  89 ++++++
+ RescueShuri/RescueShuri/GameViewController.swift   |  50 +++
+ RescueShuri/RescueShuri/Info.plist                 |  47 +++
+ 17 files changed, 767 insertions(+)
+
+commit e7a6a4a3eeee8e0bfafa4306192b791a6024ed65
+Author: Bugra Kalayci <kalaycibugra@gmail.com>
+Date:   Thu May 2 13:27:10 2019 -0400
+
+    initial commit
+
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
