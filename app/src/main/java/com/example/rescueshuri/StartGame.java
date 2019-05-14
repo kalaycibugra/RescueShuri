@@ -202,7 +202,6 @@ public class StartGame extends AppCompatActivity {
             rect = new Rect(0,0,dWidth,dHeight);
             ManX=0;
             ManY=dHeight-2*idle_player.getHeight()+idle_player.getHeight()/2+idle_player.getHeight()/4;
-//            board1.setOnTouchListener(new OnSwipeTouchListener(gameView.this));
             moveLeft=false;
             moveRight=false;
             jumping=false;
@@ -430,13 +429,8 @@ public class StartGame extends AppCompatActivity {
                         enemybulletX=monster_x;
                     }
                     if(enemyCollusion(ManX,ManY,enemybulletX,enemybulletY,idle_player,enemy_fire)) {
-                        System.out.println("hit");
-                        System.out.println(ManX);
-                        System.out.println(enemybulletX);
-                        System.out.println(life);
-                        System.out.println("asdasadsasdasdadsadsasdasas");
-    //                    is_level_swap=true;
-    //                    System.out.println(life);
+
+
                         if (life == 0){
                             is_coin1 = true;
                             game_over = true;
@@ -449,7 +443,6 @@ public class StartGame extends AppCompatActivity {
                         }
 
                         else{
-    //                        enemybulletX = enemybulletX - firespeed;
                             enemybulletX = monster_x;
 
                             life--;
@@ -503,7 +496,6 @@ public class StartGame extends AppCompatActivity {
                         canvas.drawBitmap(block, dWidth - 150 - block.getWidth() + 3 * block.getWidth(), dHeight - 6 * block.getHeight(), null);
 
                     }
-    //                canvas.drawBitmap(block,dWidth-150-block.getWidth(),dHeight-2*block.getHeight()+block.getHeight()/2+block.getHeight()/4-block.getHeight(),null);
 
                     canvas.drawBitmap(princess,dWidth-150,dHeight-2*princess.getHeight()+princess.getHeight()/2+princess.getHeight()/4,null);
 
@@ -517,7 +509,6 @@ public class StartGame extends AppCompatActivity {
                     if(level5_wall){
                         game_finish=true;
                         is_coin1 = true;
-//                        game_over = true;
                         ManX = 0;
                         isMonsterDead=false;
                         ManY = dHeight - 2 * idle_player.getHeight() + idle_player.getHeight() / 2 + idle_player.getHeight() / 4;
@@ -534,7 +525,6 @@ public class StartGame extends AppCompatActivity {
                 canvas.drawBitmap(rocket,rocketX,rocketY,null);
                 rocketX=rocketX-rocketspeed;
                 }
-            //canvas.drawBitmap(princess,dWidth-200,dHeight-princess.getHeight()-princess.getHeight()/4,null);
             handler.postDelayed(runnable,UPDATE_MILLIS);
         }
         public boolean enemyCollusion(int main_x,int main_y,int enemy_x,int enemy_y,Bitmap main,Bitmap enemy){
